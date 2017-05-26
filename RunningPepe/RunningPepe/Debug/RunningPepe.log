@@ -1,0 +1,19 @@
+﻿Build started 26.05.2017 01:00:47.
+     1>Project "C:\Users\Arek\Documents\Visual Studio 2013\Projects\RunningPepe\RunningPepe\RunningPepe.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         E:\Visual Studio 2013 Community\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt LTexture.cpp cCharacter.cpp cClouds.cpp
+         cClouds.cpp
+     1>c:\users\arek\documents\visual studio 2013\projects\runningpepe\runningpepe\ccharacter.h(7): error C2504: 'LTexture' : base class undefined
+         cCharacter.cpp
+     1>c:\users\arek\documents\visual studio 2013\projects\runningpepe\runningpepe\cclouds.h(6): error C2504: 'LTexture' : base class undefined
+     1>c:\users\arek\documents\visual studio 2013\projects\runningpepe\runningpepe\ccharacter.cpp(97): warning C4553: '==' : operator has no effect; did you intend '='?
+         LTexture.cpp
+     1>c:\users\arek\documents\visual studio 2013\projects\runningpepe\runningpepe\cclouds.h(6): error C2504: 'LTexture' : base class undefined
+     1>c:\users\arek\documents\visual studio 2013\projects\runningpepe\runningpepe\ccharacter.h(7): error C2504: 'LTexture' : base class undefined
+     1>c:\users\arek\documents\visual studio 2013\projects\runningpepe\runningpepe\ltexture.cpp(89): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+         Generating Code...
+     1>Done Building Project "C:\Users\Arek\Documents\Visual Studio 2013\Projects\RunningPepe\RunningPepe\RunningPepe.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:01.46
