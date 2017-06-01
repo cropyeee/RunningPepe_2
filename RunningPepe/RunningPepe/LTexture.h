@@ -42,6 +42,8 @@ protected:
 
 	int mWidth;
 	int mHeight;
+	double dx = 0.1;
+	int modulo = 1;
 	double posX;
 	double posY;
 	double VelY=0;

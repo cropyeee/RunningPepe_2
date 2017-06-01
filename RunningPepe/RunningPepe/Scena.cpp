@@ -89,18 +89,57 @@ bool Scena::czyKoniec()
 
 void Scena::zmienKoniec()
 {
-	koniec == true;
+	koniec =true;
 }
 
 
 Uint32 Scena::gamelogic(Uint32 interval)
 {
 	//std::cout << "gamelogic" << std::endl;
-	car.carSpeed();
-	for (auto c:chmury)
+	const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+	if (currentKeyStates[SDL_SCANCODE_SPACE] && bohater.returnSkok() == false&&bohater.returnOpadanie()==false) // klikniecie spacji
+	{
+		
+		bohater.changeSkok();
+		currentKeyStates = SDL_GetKeyboardState(NULL);
+	}
+
+	car.carSpeed(); //przyspieszenie auta
+
+	for (auto c:chmury)//poruszanie chmurami
 		c->MoveClouds();
+
+	for (auto b : tla)
+		b->moveBackground(); //poruszanie tlem
+
+	if (bohater.returnSkok()==true) //skok
+	{
+		bohater.jump(SDL_GetTicks());
+	}
+
+	if (SDL_HasIntersection(bohater.getCollider(), car.getCollider())) //kolizja
+		//std::cout << "Kolizja" << std::endl; 
 	
 	return interval;
 
+}
+
+Uint32 Scena::draws(Uint32 interval)
+{
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_RenderClear(gRenderer);
+	for (auto b : tla)
+	{
+		b->render(gRenderer);
+	}
+
+	for (auto c : chmury)
+	{
+		c->render(gRenderer);
+	}
+	bohater.render(gRenderer);
+	car.render(gRenderer);
+	SDL_RenderPresent(gRenderer);
+	return interval;
 }
 

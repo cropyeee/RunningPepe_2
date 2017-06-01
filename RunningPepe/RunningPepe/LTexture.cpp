@@ -126,10 +126,16 @@ void LTexture::carSpeed()
 {
 	
 		if (posX < (-mWidth))
-		posX = 1200;
+			posX = 1280+mWidth;
 		else
 		{
-			posX = posX - 0.1 - SDL_GetTicks()*0.000003;
+			if (SDL_GetTicks() % (modulo * 1000) < 50)
+			{
+				dx = dx + 0.02;
+				modulo += 3;
+			}
+			else
+				posX = posX - dx;
 		}
 		
 }
@@ -141,7 +147,7 @@ SDL_Rect* LTexture::getCollider()
 
 void LTexture::moveBackground()
 {
-	posX -= 0.1;
+	posX -= 0.02;
 	if (posX < -mWidth)
 		posX = 1280;
 }
