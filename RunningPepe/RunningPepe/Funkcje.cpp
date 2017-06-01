@@ -62,28 +62,28 @@ bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter 
 	bool success = true;
 
 	//Load bacground
-	if (!background.loadFromFile("droga1_modified_asd21.png", scena))
+	if (!background.loadFromFile("droga1_modified_asd21.png", scena.returnRenderer()))
 	{
 		std::cout << "Failed to load background" << std::endl;
 		success = false;
 	}
-	if (!background2.loadFromFile("droga1_modified_asd2_odbicie1.png",scena))
+	if (!background2.loadFromFile("droga1_modified_asd2_odbicie1.png",scena.returnRenderer()))
 	{
 		std::cout << "Failet to load background" << std::endl;
 		success = false;
 	}
 
-	if (!character.loadFromFile("pepe_biegnaca_final1_alpha.png", scena))
+	if (!character.loadFromFile("pepe_biegnaca_final1_alpha.png", scena.returnRenderer()))
 	{
 		std::cout << "Failed to load character" << std::endl;
 		success = false;
 	}
-	if (!police.loadFromFile("police_modified1.png", scena))
+	if (!police.loadFromFile("police_modified1.png", scena.returnRenderer()))
 	{
 		std::cout << "Failed to load police car" << std::endl;
 		success = false;
 	}
-	if (!cloud.loadFromFile("cloud_modified1.png", scena))
+	if (!cloud.loadFromFile("cloud_modified1.png", scena.returnRenderer()))
 	{
 		std::cout << "Failed to load cloud" << std::endl;
 		success = false;
@@ -109,6 +109,7 @@ void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &cha
 	//Destroy Window
 	scena.destroyRenderer();
 	scena.destroyWindow();
+	scena.zmienKoniec();
 
 	//Quit SDL subsystems
 	IMG_Quit();

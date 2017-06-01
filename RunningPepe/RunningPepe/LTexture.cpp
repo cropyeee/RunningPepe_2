@@ -7,6 +7,14 @@ LTexture::LTexture()
 	mHeight = 0;
 }
 
+LTexture::LTexture(double _posX, double _posY, SDL_Texture* _texture, int _width, int _height)
+{
+	posX = _posX;
+	posY = _posY;
+	mTexture = _texture;
+	mWidth = _width;
+	mHeight = _height;
+}
 
 
 void LTexture::setX(double _posX)
@@ -40,7 +48,7 @@ double LTexture::getY()
 {
 	return posY;
 }
-bool LTexture::loadFromFile(std::string path, Scena &scena)
+bool LTexture::loadFromFile(std::string path, SDL_Renderer *Renderer)
 {
 	free();
 
@@ -55,7 +63,7 @@ bool LTexture::loadFromFile(std::string path, Scena &scena)
 	{
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 255, 255));
 
-		newTexture = SDL_CreateTextureFromSurface(scena.returnRenderer(), loadedSurface);
+		newTexture = SDL_CreateTextureFromSurface(Renderer, loadedSurface);
 		if (newTexture == NULL)
 		{
 			std::cout << "Unable to create texture" << SDL_GetError() << std::endl;
@@ -84,11 +92,11 @@ void LTexture::free()
 	}
 }
 
-void LTexture::render(Scena &scena)
+void LTexture::render(SDL_Renderer *Renderer)
 {
 	SDL_Rect renderQuad = { posX, posY, mWidth, mHeight };
 	Collider = renderQuad;
-	SDL_RenderCopy(scena.returnRenderer(), mTexture, NULL, &renderQuad);
+	SDL_RenderCopy(Renderer, mTexture, NULL, &renderQuad);
 }
 
 int LTexture::getWidth()
@@ -106,27 +114,23 @@ SDL_Texture* LTexture::getTexture()
 	return mTexture;
 }
 
-Uint32 LTexture::PoliceMove(Uint32 interval, void*param)
+/*Uint32 LTexture::PoliceMove(Uint32 interval, void*param)
 {
 	LTexture*self = reinterpret_cast<LTexture *>(param);
 	self->movePolice();
 	SDL_TimerID timerID = SDL_AddTimer(60, PoliceMove, self);
 	return interval;
-}
+}*/
 
-void LTexture::movePolice()
+void LTexture::carSpeed()
 {
 	
 		if (posX < (-mWidth))
 		posX = 1200;
-		if (SDL_GetTicks()<8000)
-			posX = posX - 0.2;
-		if (SDL_GetTicks() < 11000&&SDL_GetTicks()>=8000)
-			posX = posX - 0.3;
-		if (SDL_GetTicks() < 14000&&SDL_GetTicks()>=11000)
-			posX = posX - 0.4;
-		if(SDL_GetTicks()>=14000)
-			posX = posX - 0.0001*SDL_GetTicks();
+		else
+		{
+			posX = posX - 0.1 - SDL_GetTicks()*0.000003;
+		}
 		
 }
 
