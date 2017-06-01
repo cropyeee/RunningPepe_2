@@ -116,3 +116,25 @@ void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &cha
 	SDL_Quit();
 }
 
+Uint32 gamelogic(Uint32 interval, void * param) {
+	Scena *self = reinterpret_cast<Scena *>(param);
+
+	if (!self->czyKoniec())
+		self->gamelogic(interval);
+
+	if (!self->czyKoniec())
+		SDL_TimerID callback = SDL_AddTimer(6, gamelogic, self);
+
+	return interval;
+}
+
+Uint32 drawing(Uint32 interval, void*param)
+{
+	Scena *self = reinterpret_cast<Scena*>(param);
+	if (!self->czyKoniec())
+		self->draws(interval);
+
+	if (!self->czyKoniec())
+		SDL_TimerID draws = SDL_AddTimer(6, drawing, self);
+	return interval;
+}

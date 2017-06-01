@@ -23,6 +23,7 @@ public:
 	void destroyWindow();
 	void draw();
 	Uint32 gamelogic(Uint32 interval);
+	Uint32 draws(Uint32 interval);
 	void destroyRenderer();
 	void addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, LTexture *_car, std::vector<LTexture*> _tla);
 	int returnScreenWidth();

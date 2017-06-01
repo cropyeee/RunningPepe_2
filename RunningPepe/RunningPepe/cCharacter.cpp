@@ -19,64 +19,80 @@ cCharacter::cCharacter(double _posX, double _posY)
 }
 
 
-
-
-/*Uint32 cCharacter::charJump(Uint32 interval, void* param)
+void cCharacter::changeSkok()
 {
-	cCharacter*self = reinterpret_cast<cCharacter *>(param);
-	if (self->returnUp() == true)
-		self->jump();
-	else
-		self->fall();
-	if (self->returnDown() == false && self->returnUp() == false)
-		return 0;
-	self->jump();
-	//SDL_TimerID timerID = SDL_AddTimer(5, charJump,self);
-	return interval;
-}*/
-
-bool cCharacter::returnUp()
-{
-	return up;
-}
-bool cCharacter::returnDown()
-{
-	return down;
-}
-void cCharacter::changeUp()
-{
-	if (up == true)
-		up = false;
-	else
-		up = true;
-}
-void cCharacter::changeDown()
-{
-	if (down == true)
-		down = false;
-	else down = true;
+	if (skok==false)
+		skok = true;
+	else skok = false;
 }
 
-void cCharacter::handleEvent(SDL_Event& e)
+void cCharacter::changeOpadanie()
 {
-	
-	/*if (e.type == SDL_KEYDOWN&&e.key.repeat == 0)
-	{
-		switch (e.key.keysym.sym)
-		{
-		case SDLK_SPACE: VelY += -5; break;
-		}
-	}*/
-	if (e.type == SDL_KEYDOWN&&e.key.repeat==0)
-	{
-			if (e.key.keysym.sym == SDLK_SPACE)
-			{
-				VelY = -5;
-			}
-	}
+	if (opadanie == true)
+		opadanie = false;
+	else opadanie = true;
+}
+
+bool cCharacter::returnSkok()
+{
+	return skok;
+}
+
+bool cCharacter::returnOpadanie()
+{
+	return opadanie;
 }
 
 void cCharacter::jump()
+{
+	/*if (posY > 250)
+		posY -= 1;
+	if (posY <= 250 && posY > 130)
+		posY -= 0.5;
+	if (posY <= 200 && posY > 130)
+		posY -= 0.25;
+	if (posY <= 150 && posY > 130)
+		posY -= 0.1;*/
+	if (posY > 290 && opadanie == false)
+		posY -= posY*0.003;
+	if (posY <= 290 && posY > 190 && opadanie == false)
+		posY -= posY*0.0022;
+	if (posY <= 190 && posY > 140 && opadanie == false)
+		posY -= posY*0.0017;
+	if (posY <= 140 && posY > 120 && opadanie == false)
+		posY -= posY*0.001;
+	if (posY <= 120 && posY > 110 && opadanie == false)
+		posY -= posY*0.0004;
+	if (posY == 110)
+		opadanie = true;
+	if (posY >= 110 && posY < 110.1)
+	{
+		posY += posY*0.00006;
+		opadanie = true;
+	}
+	if (posY >= 110.1 && posY < 120 && opadanie == true)
+		posY += posY*0.0004;
+	if (posY >= 120 && posY < 140 && opadanie == true)
+		posY += posY*0.001;
+	if (posY >= 140 && posY < 190 && opadanie == true)
+		posY += posY*0.0017;
+	if (posY >= 190 && posY < 290 && opadanie == true)
+		posY += posY*0.0022;
+	if (posY >= 290 && posY <= 470 && opadanie == true)
+		posY += posY*0.0025;
+	if (posY >= 470 && opadanie == true)
+	{
+
+		std::cout << "Wyladowal" << std::endl;
+		opadanie = false;
+		skok = false;
+	}
+
+
+}
+
+
+/*void cCharacter::jump()
 {		
 	if (down == false)
 	{
@@ -98,15 +114,4 @@ void cCharacter::jump()
 		}
 	}
 }
-
-void cCharacter::fall()
-{
-	if (posY > 470)
-	{
-		posY = posY;
-		up = false;
-		down = false;
-		VelY = 0;
-	}
-	else posY += -VelY;
-}
+*/

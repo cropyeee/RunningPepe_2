@@ -29,7 +29,7 @@ void cClouds::MoveClouds()
 {
 	posX = posX - 0.05;
 		if (posX < (-mWidth))
-			posX = 1200;
+			posX = 1200+mWidth;
 	
 	
 }

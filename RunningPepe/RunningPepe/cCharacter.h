@@ -9,17 +9,16 @@ public:
 	cCharacter();
 	~cCharacter();
 	cCharacter::cCharacter(double _posX, double _posY);
-	void fall();
-	void handleEvent(SDL_Event& e);//lazyfoo
-	void jump();//lazyfoo
-	bool returnUp();
-	bool returnDown();
-	void changeUp();
-	void changeDown();
+	void jump();
+	void changeSkok();
+	void changeOpadanie();
+	bool returnSkok();
+	bool returnOpadanie();
+	
 
 private:
-	bool up=false;
-	bool down=false;
+	bool skok = false;
+	bool opadanie = false;
 	
 };
 #endif

@@ -12,17 +12,7 @@
 //#include "cClouds.h"
 //#include "cCharacter.h"
 
-Uint32 gamelogic(Uint32 interval, void * param) {
-	Scena *self = reinterpret_cast<Scena *>(param);
 
-	if (!self->czyKoniec())
-	self->gamelogic(interval);
-
-	if (!self->czyKoniec())
-		SDL_TimerID callback = SDL_AddTimer(5, gamelogic, self);
-
-	return interval;
-}
 
 int main(int argc, char* args[])
 {
@@ -33,7 +23,7 @@ int main(int argc, char* args[])
 	LTexture background2(1280,0);
 	LTexture police(1120, 530);
 	cClouds cloud(1000, 100);
-	
+	bool zacznijLogike=false;
 
 	if (!init(scena)) //Start up SDL and create window
 	{
@@ -68,11 +58,10 @@ int main(int argc, char* args[])
 			scena.addObjects(&character, vecClouds, &police, vecBackgrounds);
 
 			bool quit = false; //Main loop flag
-
-			gamelogic(5,&scena);//game logic
+			
 			
 			SDL_Event e; //Event handler
-			
+			zacznijLogike = true; //starting logic after everything is loaded.
 			while (!quit) // while application is running
 			{
 				
@@ -80,10 +69,19 @@ int main(int argc, char* args[])
 				{
 				if (e.type == SDL_QUIT)
 					{
+						scena.zmienKoniec();
 						quit = true;
 					}
-					character.handleEvent(e); //klikniecie spacji
 				}
+
+				if (SDL_GetTicks()>500&&zacznijLogike==true)
+				{
+					gamelogic(100, &scena);//game logic
+					drawing(100, &scena);//drawing
+					zacznijLogike = false;
+				}
+
+				
 
 				//Moving objects//
 				/*character.jump();
@@ -115,7 +113,7 @@ int main(int argc, char* args[])
 				police.render(scena.returnRenderer());
 				SDL_RenderPresent(scena.returnRenderer());*/
 
-				scena.draw();
+				//scena.draw();
 			}
 				
 			
@@ -132,4 +130,4 @@ int main(int argc, char* args[])
 
 
 
-//gdy przy funkcji gamelogic usune static to nie moge jej jeszcze raz wywolac
+//1) gra zawiesza sie na amen po kilkunastu skokach
