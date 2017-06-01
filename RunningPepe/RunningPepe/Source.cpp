@@ -12,7 +12,17 @@
 //#include "cClouds.h"
 //#include "cCharacter.h"
 
+Uint32 gamelogic(Uint32 interval, void * param) {
+	Scena *self = reinterpret_cast<Scena *>(param);
 
+	if (!self->czyKoniec())
+	self->gamelogic(interval);
+
+	if (!self->czyKoniec())
+		SDL_TimerID callback = SDL_AddTimer(5, gamelogic, self);
+
+	return interval;
+}
 
 int main(int argc, char* args[])
 {
@@ -38,19 +48,31 @@ int main(int argc, char* args[])
 		}
 		else
 		{
-			
+			//creating additional objects;
 			cClouds *cloud1 = new cClouds(600, 120,cloud.getTexture(),cloud.getWidth(),cloud.getHeight());
 			cClouds *cloud2=new cClouds(205, 49, cloud.getTexture(),cloud.getWidth(),cloud.getHeight());
 			cClouds *cloud3=new cClouds(1301, 30, cloud.getTexture(), cloud.getWidth(), cloud.getHeight());
 			cClouds *cloud4 = new cClouds(1000, 100, cloud.getTexture(), cloud.getWidth(), cloud.getHeight());
+			LTexture *backg1 = new LTexture(0, 0, background.getTexture(), background.getWidth(), background.getHeight());
+			LTexture *backg2 = new LTexture(1280, 0, background2.getTexture(), background2.getWidth(), background2.getHeight());
 			std::vector<cClouds*> vecClouds;
+			std::vector<LTexture*> vecBackgrounds;
+			vecBackgrounds.push_back(backg1);
+			vecBackgrounds.push_back(backg2);
 			vecClouds.push_back(cloud1);
 			vecClouds.push_back(cloud2);
 			vecClouds.push_back(cloud3);
 			vecClouds.push_back(cloud4);
+
+			//adding objects to scene
+			scena.addObjects(&character, vecClouds, &police, vecBackgrounds);
+
 			bool quit = false; //Main loop flag
-			scena.gamelogic();//game logic
+
+			gamelogic(5,&scena);//game logic
+			
 			SDL_Event e; //Event handler
+			
 			while (!quit) // while application is running
 			{
 				
@@ -64,41 +86,50 @@ int main(int argc, char* args[])
 				}
 
 				//Moving objects//
-				character.jump();
+				/*character.jump();
 
-				background.moveBackground();
-				background2.moveBackground();
+				for (auto b : vecBackgrounds)
+					b->moveBackground();
 				police.movePolice();
 				for (auto c : vecClouds)
 					c->MoveClouds();
+
 				//Collision detection//
 				if (SDL_HasIntersection(character.getCollider(), police.getCollider()))
-					std::cout << "Kolizja" << std::endl;
+					std::cout << "Kolizja" << std::endl;*/
+
 				//Start renderning//
-				SDL_SetRenderDrawColor(scena.returnRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
+				
+				/*SDL_SetRenderDrawColor(scena.returnRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(scena.returnRenderer());
-				background.render(scena);
-				background2.render(scena);
+				for (auto b : vecBackgrounds)
+				{
+					b->render(scena.returnRenderer());
+				}
+				
 				for (auto c:vecClouds)
 				{
-					c->render(scena);
+					c->render(scena.returnRenderer());
 				} 
-				character.render(scena);
-				police.render(scena);
-				SDL_RenderPresent(scena.returnRenderer());
+				character.render(scena.returnRenderer());
+				police.render(scena.returnRenderer());
+				SDL_RenderPresent(scena.returnRenderer());*/
+
+				scena.draw();
 			}
+				
 			
 			for (int i = 0; i < vecClouds.size(); i++)
 				delete vecClouds[i];
+			for (int i = 0; i < vecBackgrounds.size(); i++)
+				delete vecBackgrounds[i];
 		}
 	}
 	close(scena,background,police,character,cloud,background2);
+	
 	return 0;
 }
 
 
 
-// 1)Po dodaniu do wektora nie dzialaja funkcje
-// 2)Przekazanie dodatkowych parametrów do callbacka (ogólnie gamelogic w SDL)
-// 3)Problem ze skokiem(dziala tylko raz, stworzenie chwilowego zawisniecia)
-// 4)Dlaczego samochod dziwnie przyspiesza
+//gdy przy funkcji gamelogic usune static to nie moge jej jeszcze raz wywolac

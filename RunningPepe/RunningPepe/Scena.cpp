@@ -5,6 +5,7 @@ Scena::Scena()
 {
 	gRenderer = NULL;
 	gWindow = NULL;
+	koniec = false;
 }
 
 Scena::~Scena()
@@ -54,7 +55,52 @@ int Scena::returnScreenWidth()
 	return SCREEN_WIDTH;
 }
 
-void Scena::gamelogic()
+void Scena::addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, LTexture *_car, std::vector<LTexture*> _tla)
 {
-	
+	bohater = *_bohater;
+	chmury = _chmury;
+	car = *_car;
+	tla = _tla;
 }
+
+void Scena::draw()
+{
+	//std::cout << "draw" << std::endl;
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_RenderClear(gRenderer);
+	for (auto b : tla)
+	{
+		b->render(gRenderer);
+	}
+
+	for (auto c : chmury)
+	{
+		c->render(gRenderer);
+	}
+	bohater.render(gRenderer);
+	car.render(gRenderer);
+	SDL_RenderPresent(gRenderer);
+}
+
+bool Scena::czyKoniec()
+{
+	return koniec;
+}
+
+void Scena::zmienKoniec()
+{
+	koniec == true;
+}
+
+
+Uint32 Scena::gamelogic(Uint32 interval)
+{
+	//std::cout << "gamelogic" << std::endl;
+	car.carSpeed();
+	for (auto c:chmury)
+		c->MoveClouds();
+	
+	return interval;
+
+}
+
