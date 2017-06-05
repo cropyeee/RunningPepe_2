@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <ctime>
 
 
 
@@ -24,11 +25,14 @@ public:
 	void free();
 	void moveX(int dx);
 	void setX(double _posX);
+	
+	void mousePos(double x, double y);
 
 	void carSpeed();
 	void moveBackground();
 
 	void render(SDL_Renderer *Renderer);
+	
 
 	int getWidth();
 	int getHeight();

@@ -94,10 +94,13 @@ void LTexture::free()
 
 void LTexture::render(SDL_Renderer *Renderer)
 {
+	
 	SDL_Rect renderQuad = { posX, posY, mWidth, mHeight };
 	Collider = renderQuad;
 	SDL_RenderCopy(Renderer, mTexture, NULL, &renderQuad);
 }
+
+
 
 int LTexture::getWidth()
 {
@@ -124,14 +127,15 @@ SDL_Texture* LTexture::getTexture()
 
 void LTexture::carSpeed()
 {
-	
+	srand(time(NULL));
 		if (posX < (-mWidth))
-			posX = 1280+mWidth;
+			posX = 1280+mWidth+(rand()%1000);
 		else
 		{
-			if (SDL_GetTicks() % (modulo * 1000) < 50)
+			if (SDL_GetTicks() % (modulo * 1000) < modulo * 50)
 			{
-				dx = dx + 0.02;
+				dx = dx + 0.05; //sprobuj uzaleznic to od tego ile razy auto wyjechalo z ekranu;
+				std::cout << "Przyspieszono!" << dx << std::endl;
 				modulo += 3;
 			}
 			else
@@ -150,4 +154,10 @@ void LTexture::moveBackground()
 	posX -= 0.02;
 	if (posX < -mWidth)
 		posX = 1280;
+}
+
+void LTexture::mousePos(double x, double y)
+{
+	posX = x-mWidth/2.0;
+	posY = y-mHeight/2.0;
 }

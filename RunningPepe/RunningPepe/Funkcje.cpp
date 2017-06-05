@@ -56,7 +56,7 @@ bool init(Scena &scena)
 }
 
 
-bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2)
+bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2,LTexture &crosshair)
 {
 	//Loading success flag
 	bool success = true;
@@ -88,8 +88,11 @@ bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter 
 		std::cout << "Failed to load cloud" << std::endl;
 		success = false;
 	}
-
-
+	if (!crosshair.loadFromFile("crosshair_final.png", scena.returnRenderer()))
+	{
+		std::cout << "Failed to load crosshair" << std::endl;
+		success = false;
+	}
 
 	return success;
 }

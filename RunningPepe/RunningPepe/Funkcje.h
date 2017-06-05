@@ -13,7 +13,7 @@
 bool init(Scena &scena);
 
 //Loads media
-bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud,LTexture &background2);
+bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud,LTexture &background2,LTexture &crosshair);
 
 //Frees media and shuts down SDL
 void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2);

@@ -55,12 +55,13 @@ int Scena::returnScreenWidth()
 	return SCREEN_WIDTH;
 }
 
-void Scena::addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, LTexture *_car, std::vector<LTexture*> _tla)
+void Scena::addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, std::vector<LTexture*> _cars, std::vector<LTexture*> _tla,LTexture *_celownik)
 {
 	bohater = *_bohater;
 	chmury = _chmury;
-	car = *_car;
+	cars = _cars;
 	tla = _tla;
+	celownik = *_celownik;
 }
 
 void Scena::draw()
@@ -78,7 +79,8 @@ void Scena::draw()
 		c->render(gRenderer);
 	}
 	bohater.render(gRenderer);
-	car.render(gRenderer);
+	for (auto c : cars)
+		c->render(gRenderer);
 	SDL_RenderPresent(gRenderer);
 }
 
@@ -104,7 +106,8 @@ Uint32 Scena::gamelogic(Uint32 interval)
 		currentKeyStates = SDL_GetKeyboardState(NULL);
 	}
 
-	car.carSpeed(); //przyspieszenie auta
+	for (auto c : cars)
+		c->carSpeed();	//przyspieszenie auta
 
 	for (auto c:chmury)//poruszanie chmurami
 		c->MoveClouds();
@@ -116,9 +119,12 @@ Uint32 Scena::gamelogic(Uint32 interval)
 	{
 		bohater.jump();
 	}
-
-	if (SDL_HasIntersection(bohater.getCollider(), car.getCollider())) //kolizja
-		//std::cout << "Kolizja" << std::endl; 
+	for (auto c : cars)
+	//{
+		if (SDL_HasIntersection(bohater.getCollider(), c->getCollider())) //kolizja
+			//koniec = true;
+	//}
+	
 	
 	return interval;
 
@@ -137,8 +143,16 @@ Uint32 Scena::draws(Uint32 interval)
 	{
 		c->render(gRenderer);
 	}
+
 	bohater.render(gRenderer);
-	car.render(gRenderer);
+
+	for (auto c : cars)
+		c->render(gRenderer);
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	celownik.mousePos(x, y);
+	celownik.render(gRenderer);
+
 	SDL_RenderPresent(gRenderer);
 	return interval;
 }

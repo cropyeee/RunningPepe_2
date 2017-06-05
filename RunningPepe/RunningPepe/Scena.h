@@ -25,7 +25,7 @@ public:
 	Uint32 gamelogic(Uint32 interval);
 	Uint32 draws(Uint32 interval);
 	void destroyRenderer();
-	void addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, LTexture *_car, std::vector<LTexture*> _tla);
+	void addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, std::vector<LTexture*> _cars, std::vector<LTexture*> _tla,LTexture *_celownik);
 	int returnScreenWidth();
 	int returnScreenHeight();
 	bool czyKoniec();
@@ -37,9 +37,10 @@ protected:
 	SDL_Renderer* gRenderer;
 	SDL_Window* gWindow;
 	cCharacter bohater;
+	LTexture celownik;
 	std::vector<cClouds*> chmury;
 	std::vector<LTexture*> tla;
-	LTexture car;
+	std::vector<LTexture*> cars;
 };
 #endif
 
