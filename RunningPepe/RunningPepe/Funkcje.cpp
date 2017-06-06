@@ -48,6 +48,10 @@ bool init(Scena &scena)
 					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 					success = false;
 				}
+				if (TTF_Init() == -1)
+				{
+					success = false;
+				}
 			}
 		}
 	}
@@ -56,7 +60,7 @@ bool init(Scena &scena)
 }
 
 
-bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2)
+bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2,LTexture &crosshair,LTexture &tekst)
 {
 	//Loading success flag
 	bool success = true;
@@ -88,15 +92,18 @@ bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter 
 		std::cout << "Failed to load cloud" << std::endl;
 		success = false;
 	}
-
-
+	if (!crosshair.loadFromFile("crosshair_final.png", scena.returnRenderer()))
+	{
+		std::cout << "Failed to load crosshair" << std::endl;
+		success = false;
+	}
 
 	return success;
 }
 
 
 
-void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2)
+void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2, LTexture &crosshair, LTexture &tekst)
 {
 	//Free loaded image
 	background.free();
@@ -104,6 +111,9 @@ void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &cha
 	police.free();
 	cloud.free();
 	background2.free();
+	crosshair.free();
+	tekst.free();
+
 
 
 	//Destroy Window
@@ -112,6 +122,7 @@ void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &cha
 	scena.zmienKoniec();
 
 	//Quit SDL subsystems
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }

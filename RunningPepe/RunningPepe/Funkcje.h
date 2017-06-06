@@ -13,10 +13,10 @@
 bool init(Scena &scena);
 
 //Loads media
-bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud,LTexture &background2);
+bool loadMedia(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud,LTexture &background2,LTexture &crosshair,LTexture &tekst);
 
 //Frees media and shuts down SDL
-void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2);
+void close(Scena &scena, LTexture &background, LTexture &police, cCharacter &character, cClouds &cloud, LTexture &background2, LTexture &crosshair, LTexture &tekst);
 
 Uint32 gamelogic(Uint32 interval, void * param);
 Uint32 drawing(Uint32 interval, void*param);

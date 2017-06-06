@@ -17,14 +17,14 @@ LTexture::LTexture(double _posX, double _posY, SDL_Texture* _texture, int _width
 }
 
 
-void LTexture::setX(double _posX)
+void LTexture::setX(double rand)
 {
-	posX = _posX;
+	posX = 1280 + mWidth + rand;
 }
 
 void LTexture::moveX(int dx)
 {
-	posX = posX + dx;
+	posX = posX - dx;
 }
 
 LTexture::LTexture(double _posX, double _posY)
@@ -79,6 +79,35 @@ bool LTexture::loadFromFile(std::string path, SDL_Renderer *Renderer)
 	return mTexture != NULL;
 }
 
+bool LTexture::loadFromRenderedText(int punkty, SDL_Renderer *Renderer)
+{
+	free();
+	
+	std::string points = std::to_string(punkty);
+	TTF_Font* gFont = TTF_OpenFont("GoodDog.ttf", 24);
+	SDL_Color textColor = { 255, 255, 255 };
+	SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, points.c_str(), textColor);
+	if (textSurface == NULL)
+	{
+		std::cout << "Unable to render text surface!" << std::endl;
+	}
+	else
+	{
+		mTexture = SDL_CreateTextureFromSurface(Renderer, textSurface);
+		if (mTexture == NULL)
+		{
+			std::cout << "Unable to create texture from rendered text!" << std::endl;
+		}
+		else
+		{
+			mWidth = textSurface->w;
+			mHeight = textSurface->h;
+		}
+		SDL_FreeSurface(textSurface);
+	}
+	return mTexture != NULL;
+}
+
 void LTexture::free()
 {
 	if (mTexture != NULL)
@@ -94,10 +123,13 @@ void LTexture::free()
 
 void LTexture::render(SDL_Renderer *Renderer)
 {
+	
 	SDL_Rect renderQuad = { posX, posY, mWidth, mHeight };
 	Collider = renderQuad;
 	SDL_RenderCopy(Renderer, mTexture, NULL, &renderQuad);
 }
+
+
 
 int LTexture::getWidth()
 {
@@ -114,29 +146,36 @@ SDL_Texture* LTexture::getTexture()
 	return mTexture;
 }
 
-/*Uint32 LTexture::PoliceMove(Uint32 interval, void*param)
-{
-	LTexture*self = reinterpret_cast<LTexture *>(param);
-	self->movePolice();
-	SDL_TimerID timerID = SDL_AddTimer(60, PoliceMove, self);
-	return interval;
-}*/
 
 void LTexture::carSpeed()
 {
 	
 		if (posX < (-mWidth))
-			posX = 1280+mWidth;
+			posX = 1280+mWidth+(rand()%1000);
 		else
 		{
-			if (SDL_GetTicks() % (modulo * 1000) < 50)
+			if ((SDL_GetTicks() - poprzedniePrzyspieszenie) > 10000)
 			{
-				dx = dx + 0.02;
+				dx = dx + 0.05;
+				std::cout << "Przyspieszenie " << dx << std::endl;
+				poprzedniePrzyspieszenie = SDL_GetTicks();
+			}
+			else
+			{
+				posX = posX - dx;
+			}
+		}
+		/*else
+		{
+			if (SDL_GetTicks() % (modulo * 1000) < modulo * 50)
+			{
+				dx = dx + 0.05; //sprobuj uzaleznic to od tego ile razy auto wyjechalo z ekranu;
+				std::cout << "Przyspieszono!" << dx << std::endl;
 				modulo += 3;
 			}
 			else
 				posX = posX - dx;
-		}
+		}*/
 		
 }
 
@@ -151,3 +190,10 @@ void LTexture::moveBackground()
 	if (posX < -mWidth)
 		posX = 1280;
 }
+
+void LTexture::mousePos(double x, double y)
+{
+	posX = x-mWidth/2.0;
+	posY = y-mHeight/2.0;
+}
+

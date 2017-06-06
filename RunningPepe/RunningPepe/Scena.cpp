@@ -55,12 +55,13 @@ int Scena::returnScreenWidth()
 	return SCREEN_WIDTH;
 }
 
-void Scena::addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, LTexture *_car, std::vector<LTexture*> _tla)
+void Scena::addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, std::vector<LTexture*> _cars, std::vector<LTexture*> _tla,LTexture *_celownik)
 {
 	bohater = *_bohater;
 	chmury = _chmury;
-	car = *_car;
+	cars = _cars;
 	tla = _tla;
+	celownik = *_celownik;
 }
 
 void Scena::draw()
@@ -78,7 +79,8 @@ void Scena::draw()
 		c->render(gRenderer);
 	}
 	bohater.render(gRenderer);
-	car.render(gRenderer);
+	for (auto c : cars)
+		c->render(gRenderer);
 	SDL_RenderPresent(gRenderer);
 }
 
@@ -104,7 +106,18 @@ Uint32 Scena::gamelogic(Uint32 interval)
 		currentKeyStates = SDL_GetKeyboardState(NULL);
 	}
 
-	car.carSpeed(); //przyspieszenie auta
+	for (auto c : cars)
+	{
+		c->carSpeed();	//przyspieszenie auta
+	}//dodaj warunek ze jezeli auta sie zderzaja to wtedy dodaje sie np 200 do pozycji
+
+	for (auto c : cars)
+	{
+		if (SDL_HasIntersection(c->getCollider(), (c + 1)->getCollider()))
+			c->moveX(300);
+	}
+	
+	
 
 	for (auto c:chmury)//poruszanie chmurami
 		c->MoveClouds();
@@ -117,8 +130,15 @@ Uint32 Scena::gamelogic(Uint32 interval)
 		bohater.jump();
 	}
 
-	if (SDL_HasIntersection(bohater.getCollider(), car.getCollider())) //kolizja
-		//std::cout << "Kolizja" << std::endl; 
+	for (auto c : cars)
+	{
+		if (SDL_HasIntersection(bohater.getCollider(), c->getCollider())) //kolizja
+		{
+			//koniec = true;
+			//std::cout << "Kolizja" << std::endl;
+		}
+	}
+			
 	
 	return interval;
 
@@ -137,9 +157,48 @@ Uint32 Scena::draws(Uint32 interval)
 	{
 		c->render(gRenderer);
 	}
+
 	bohater.render(gRenderer);
-	car.render(gRenderer);
+
+	
+
+	for (auto c : cars)
+		c->render(gRenderer);
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+	celownik.mousePos(x, y);
+	celownik.render(gRenderer);
+
 	SDL_RenderPresent(gRenderer);
 	return interval;
 }
 
+void Scena::addPoints(int add)
+{
+	punkty += add;
+	std::cout << punkty << std::endl;
+}
+
+void Scena::handleEvent(SDL_Event* e)
+{
+	if (e->type == SDL_MOUSEBUTTONDOWN)
+	{
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		std::cout << "Kliknieto " << x << " " << y << std::endl;
+		if (bohater.returnSkok() == true)
+		{
+			for (auto c : cars)
+			{
+				if (x<(c->getX() + c->getWidth()) && x>c->getX() && y<c->getY() + c->getHeight() && y>c->getY() && (SDL_GetTicks() - CzasOstatniegoStrzalu) > 3000)
+				{
+					std::cout << "Trafiono auto" << std::endl;
+					c->setX((rand() % 1000));
+					punkty = punkty + 20;
+					std::cout << punkty << std::endl;
+					CzasOstatniegoStrzalu = SDL_GetTicks();
+				}
+			}
+		}
+	}
+}

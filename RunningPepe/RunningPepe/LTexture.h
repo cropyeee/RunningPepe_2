@@ -5,9 +5,11 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <ctime>
 
 
 
@@ -20,15 +22,20 @@ public:
 	~LTexture();
 
 	bool loadFromFile(std::string path, SDL_Renderer *Renderer);
+	bool loadFromRenderedText(int punkty, SDL_Renderer *Renderer);
 
 	void free();
 	void moveX(int dx);
 	void setX(double _posX);
+	
+	void mousePos(double x, double y);
 
 	void carSpeed();
-	void moveBackground();
+	void moveBackground(); 
+	
 
 	void render(SDL_Renderer *Renderer);
+	
 
 	int getWidth();
 	int getHeight();
@@ -39,10 +46,10 @@ public:
 protected:
 	SDL_Texture* mTexture;
 	SDL_Renderer* gRenderer;
-
+	int poprzedniePrzyspieszenie = -5000;
 	int mWidth;
 	int mHeight;
-	double dx = 0.1;
+	double dx = 0.25;
 	int modulo = 1;
 	double posX;
 	double posY;

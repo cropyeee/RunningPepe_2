@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -22,7 +23,10 @@ int main(int argc, char* args[])
 	LTexture background(0,0);
 	LTexture background2(1280,0);
 	LTexture police(1120, 530);
+	LTexture tekst(1, 0);
 	cClouds cloud(1000, 100);
+	LTexture crosshair(1, 0);
+	int czas = -3000;
 	bool zacznijLogike=false;
 
 	if (!init(scena)) //Start up SDL and create window
@@ -32,7 +36,7 @@ int main(int argc, char* args[])
 	else
 	{
 		
-		if (!loadMedia(scena,background,police,character,cloud,background2)) //Load media
+		if (!loadMedia(scena,background,police,character,cloud,background2,crosshair,tekst)) //Load media
 		{
 			std::cout << "Failed to load media!" << std::endl;
 		}
@@ -45,23 +49,32 @@ int main(int argc, char* args[])
 			cClouds *cloud4 = new cClouds(1000, 100, cloud.getTexture(), cloud.getWidth(), cloud.getHeight());
 			LTexture *backg1 = new LTexture(0, 0, background.getTexture(), background.getWidth(), background.getHeight());
 			LTexture *backg2 = new LTexture(1280, 0, background2.getTexture(), background2.getWidth(), background2.getHeight());
+			LTexture *police1 = new LTexture(1120, 530, police.getTexture(), police.getWidth(), police.getHeight());
+			LTexture *police2 = new LTexture(17000, 530, police.getTexture(), police.getWidth(), police.getHeight());
+
 			std::vector<cClouds*> vecClouds;
 			std::vector<LTexture*> vecBackgrounds;
+			std::vector<LTexture*> vecPolice;
+			
+			vecPolice.push_back(police1);
+			vecPolice.push_back(police2);
 			vecBackgrounds.push_back(backg1);
 			vecBackgrounds.push_back(backg2);
 			vecClouds.push_back(cloud1);
 			vecClouds.push_back(cloud2);
 			vecClouds.push_back(cloud3);
 			vecClouds.push_back(cloud4);
+			
 
 			//adding objects to scene
-			scena.addObjects(&character, vecClouds, &police, vecBackgrounds);
+			scena.addObjects(&character, vecClouds, vecPolice, vecBackgrounds,&crosshair);
 
 			bool quit = false; //Main loop flag
 			
 			
 			SDL_Event e; //Event handler
 			zacznijLogike = true; //starting logic after everything is loaded.
+			srand(time(NULL));
 			while (!quit) // while application is running
 			{
 				
@@ -72,8 +85,10 @@ int main(int argc, char* args[])
 						scena.zmienKoniec();
 						quit = true;
 					}
+				scena.handleEvent(&e); //mouse clicking;
+				
 				}
-
+				
 				if (SDL_GetTicks()>500&&zacznijLogike==true)
 				{
 					gamelogic(100, &scena);//game logic
@@ -81,39 +96,16 @@ int main(int argc, char* args[])
 					zacznijLogike = false;
 				}
 
-				
-
-				//Moving objects//
-				/*character.jump();
-
-				for (auto b : vecBackgrounds)
-					b->moveBackground();
-				police.movePolice();
-				for (auto c : vecClouds)
-					c->MoveClouds();
-
-				//Collision detection//
-				if (SDL_HasIntersection(character.getCollider(), police.getCollider()))
-					std::cout << "Kolizja" << std::endl;*/
-
-				//Start renderning//
-				
-				/*SDL_SetRenderDrawColor(scena.returnRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
-				SDL_RenderClear(scena.returnRenderer());
-				for (auto b : vecBackgrounds)
+			/*	if (SDL_GetTicks()>500&&SDL_GetTicks() % 1000 == 0)
 				{
-					b->render(scena.returnRenderer());
-				}
-				
-				for (auto c:vecClouds)
-				{
-					c->render(scena.returnRenderer());
-				} 
-				character.render(scena.returnRenderer());
-				police.render(scena.returnRenderer());
-				SDL_RenderPresent(scena.returnRenderer());*/
+					scena.addPoints();
+					std::cout << SDL_GetTicks() << std::endl;
+				}*/
 
-				//scena.draw();
+				//if (scena.czyKoniec() == true)
+				//	quit = true; 
+				
+				
 			}
 				
 			
@@ -121,9 +113,11 @@ int main(int argc, char* args[])
 				delete vecClouds[i];
 			for (int i = 0; i < vecBackgrounds.size(); i++)
 				delete vecBackgrounds[i];
+			for (int i = 0; i < vecPolice.size(); i++)
+				delete vecPolice[i];
 		}
 	}
-	close(scena,background,police,character,cloud,background2);
+	close(scena,background,police,character,cloud,background2,crosshair,tekst);
 	
 	return 0;
 }
@@ -131,3 +125,4 @@ int main(int argc, char* args[])
 
 
 //1) gra zawiesza sie na amen po kilkunastu skokach
+//2) gra zaczyna strasznie lagowac gdy auta jada szybko
