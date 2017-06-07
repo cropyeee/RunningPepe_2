@@ -21,8 +21,11 @@ cCharacter::cCharacter(double _posX, double _posY)
 
 void cCharacter::changeSkok()
 {
-	if (skok==false)
+	if (skok == false)
+	{
+		a = 100;
 		skok = true;
+	}
 	else skok = false;
 }
 
@@ -45,49 +48,51 @@ bool cCharacter::returnOpadanie()
 
 void cCharacter::jump()
 {
-	/*if (posY > 250)
-		posY -= 1;
-	if (posY <= 250 && posY > 130)
-		posY -= 0.5;
-	if (posY <= 200 && posY > 130)
-		posY -= 0.25;
-	if (posY <= 150 && posY > 130)
-		posY -= 0.1;*/
-	if (posY > 290 && opadanie == false)
-		posY -= posY*0.003;
-	if (posY <= 290 && posY > 190 && opadanie == false)
-		posY -= posY*0.0022;
-	if (posY <= 190 && posY > 140 && opadanie == false)
-		posY -= posY*0.0017;
-	if (posY <= 140 && posY > 120 && opadanie == false)
-		posY -= posY*0.001;
-	if (posY <= 120 && posY > 110 && opadanie == false)
-		posY -= posY*0.0004;
-	if (posY == 110)
-		opadanie = true;
-	if (posY >= 110 && posY < 110.1)
+	a -= 0.5;
+	posY -= a/45.0;
+	if (posY > 470)
 	{
-		posY += posY*0.00006;
+		skok = false;
+		a = 0;
+	}
+	
+	/*
+	if (posY > 290 && opadanie == false)
+		posY -= posY*0.008;
+	if (posY <= 290 && posY > 270 && opadanie == false)
+		posY -= posY*0.006;
+	if (posY <= 270 && posY > 230 && opadanie == false)
+		posY -= posY*0.005;
+	if (posY <= 230 && posY > 200 && opadanie == false)
+		posY -= posY*0.004;
+	if (posY <= 200 && posY > 190 && opadanie == false)
+		posY -= posY*0.0025;
+	if (posY == 190)
+		opadanie = true;
+	if (posY >= 190 && posY < 190.1 && opadanie==false)
+	{
+		posY += posY*0.0025;
 		opadanie = true;
 	}
-	if (posY >= 110.1 && posY < 120 && opadanie == true)
-		posY += posY*0.0004;
-	if (posY >= 120 && posY < 140 && opadanie == true)
-		posY += posY*0.001;
-	if (posY >= 140 && posY < 190 && opadanie == true)
-		posY += posY*0.0017;
-	if (posY >= 190 && posY < 290 && opadanie == true)
-		posY += posY*0.0022;
-	if (posY >= 290 && posY <= 470 && opadanie == true)
-		posY += posY*0.0025;
+	if (posY <= 470 && opadanie == true)
+		posY += 0.1;*/
+	/*if (posY >= 190.1 && posY < 185 && opadanie == true)
+		posY += posY*0.004;
+	if (posY >= 185 && posY < 170 && opadanie == true)
+		posY += posY*0.005;
+	if (posY >= 170 && posY < 200 && opadanie == true)
+		posY += posY*0.006;
+	if (posY >= 200 && posY < 250 && opadanie == true)
+		posY += posY*0.007;
+	if (posY >= 250 && posY <= 470 && opadanie == true)
+		posY += posY*0.0085;
 	if (posY >= 470 && opadanie == true)
 	{
 
-		std::cout << "Wyladowal" << std::endl;
+		//std::cout << "Wyladowal" << std::endl;
 		opadanie = false;
 		skok = false;
-	}
-
+	}*/
 
 }
 

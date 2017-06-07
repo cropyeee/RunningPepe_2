@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 #include "LTexture.h"
@@ -25,11 +26,13 @@ public:
 	Uint32 gamelogic(Uint32 interval);
 	Uint32 draws(Uint32 interval);
 	void destroyRenderer();
-	void addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, LTexture *_car, std::vector<LTexture*> _tla);
+	void addObjects(cCharacter *_bohater, std::vector<cClouds*> _chmury, std::vector<LTexture*> _cars, std::vector<LTexture*> _tla,LTexture *_celownik,LTexture *_tekst);
 	int returnScreenWidth();
 	int returnScreenHeight();
 	bool czyKoniec();
 	void zmienKoniec();
+	void addPoints(int add);
+	void handleEvent(SDL_Event* e);
 protected:
 	const int SCREEN_WIDTH = 1280;
 	const int SCREEN_HEIGHT = 720;
@@ -37,9 +40,15 @@ protected:
 	SDL_Renderer* gRenderer;
 	SDL_Window* gWindow;
 	cCharacter bohater;
+	LTexture celownik;
+	LTexture tekst;
+	int punkty=0;
+	int CzasOstatniegoStrzalu = -3000;
+
+	
 	std::vector<cClouds*> chmury;
 	std::vector<LTexture*> tla;
-	LTexture car;
+	std::vector<LTexture*> cars;
 };
 #endif
 

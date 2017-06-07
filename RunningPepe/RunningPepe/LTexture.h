@@ -5,9 +5,11 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <ctime>
 
 
 
@@ -20,18 +22,28 @@ public:
 	~LTexture();
 
 	bool loadFromFile(std::string path, SDL_Renderer *Renderer);
+	bool loadFromRenderedText(int punkty, SDL_Renderer *Renderer);
 
 	void free();
 	void moveX(int dx);
 	void setX(double _posX);
+	
+	void mousePos(double x, double y);
 
 	void carSpeed();
-	void moveBackground();
+	void carRotate();
+	void moveBackground(); 
+	
 
 	void render(SDL_Renderer *Renderer);
+	void renderFlip(SDL_Renderer *Renderer);
+	
+	
 
 	int getWidth();
 	int getHeight();
+	void changeHit();
+	bool returnHit();
 	double getX();
 	double getY();
 	SDL_Rect* getCollider();
@@ -39,10 +51,17 @@ public:
 protected:
 	SDL_Texture* mTexture;
 	SDL_Renderer* gRenderer;
-
+	SDL_Rect* clip = NULL;
+	SDL_Point* center = NULL;
+	SDL_RendererFlip flip = SDL_FLIP_NONE;
+	int poprzedniePrzyspieszenie = -5000;
 	int mWidth;
 	int mHeight;
-	double dx = 0.1;
+	double dx = 1;
+	double angle = 0.0;
+	bool hit = false;
+	TTF_Font *gFont=TTF_OpenFont("orange_juice.ttf", 72);
+	
 	int modulo = 1;
 	double posX;
 	double posY;

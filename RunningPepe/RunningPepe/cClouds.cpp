@@ -19,9 +19,9 @@ cClouds::~cClouds()
 Uint32 cClouds::movingClouds(Uint32 interval, void* param)
 {
 	
-	cClouds *self = reinterpret_cast<cClouds *>(param);
+	/*cClouds *self = reinterpret_cast<cClouds *>(param);
 	self->MoveClouds();
-	SDL_TimerID timerID = SDL_AddTimer(60, movingClouds,self);
+	SDL_TimerID timerID = SDL_AddTimer(60, movingClouds,self);*/
 	return interval;
 }
 

@@ -19,6 +19,6 @@ public:
 private:
 	bool skok = false;
 	bool opadanie = false;
-	
+	double a;
 };
 #endif

@@ -17,14 +17,14 @@ LTexture::LTexture(double _posX, double _posY, SDL_Texture* _texture, int _width
 }
 
 
-void LTexture::setX(double _posX)
+void LTexture::setX(double rand)
 {
-	posX = _posX;
+	posX = 1280 + mWidth + rand;
 }
 
 void LTexture::moveX(int dx)
 {
-	posX = posX + dx;
+	posX = posX - dx;
 }
 
 LTexture::LTexture(double _posX, double _posY)
@@ -79,6 +79,39 @@ bool LTexture::loadFromFile(std::string path, SDL_Renderer *Renderer)
 	return mTexture != NULL;
 }
 
+bool LTexture::loadFromRenderedText(int punkty, SDL_Renderer *Renderer)
+{
+	free();
+
+	std::string points = std::to_string(punkty);
+	points = "Points: " + points;
+	SDL_Color textColor = { 0, 188, 255 };
+	if (gFont)
+	{
+		SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, points.c_str(), textColor);
+		if (textSurface == NULL)
+		{
+			std::cout << "Unable to render text surface!" << std::endl;
+		}
+		else
+		{
+			mTexture = SDL_CreateTextureFromSurface(Renderer, textSurface);
+			if (mTexture == NULL)
+			{
+				std::cout << "Unable to create texture from rendered text!" << std::endl;
+			}
+			else
+			{
+				mWidth = textSurface->w;
+				mHeight = textSurface->h;
+			}
+			SDL_FreeSurface(textSurface);
+		}
+		return mTexture != NULL;
+	}
+	else std::cout << "Unable to load font" << std::endl;
+}
+
 void LTexture::free()
 {
 	if (mTexture != NULL)
@@ -94,10 +127,25 @@ void LTexture::free()
 
 void LTexture::render(SDL_Renderer *Renderer)
 {
+	
 	SDL_Rect renderQuad = { posX, posY, mWidth, mHeight };
 	Collider = renderQuad;
 	SDL_RenderCopy(Renderer, mTexture, NULL, &renderQuad);
 }
+
+void LTexture::renderFlip(SDL_Renderer *Renderer)
+{
+	SDL_Rect renderQuad = { posX, posY, mWidth, mHeight };
+	Collider = renderQuad;
+	/*if (clip != NULL)
+	{
+		renderQuad.w = clip->w;
+		renderQuad.h = clip->h;
+	}*/
+	SDL_RenderCopyEx(Renderer, mTexture,NULL, &renderQuad,angle,center,flip);
+}
+
+
 
 int LTexture::getWidth()
 {
@@ -114,30 +162,72 @@ SDL_Texture* LTexture::getTexture()
 	return mTexture;
 }
 
-/*Uint32 LTexture::PoliceMove(Uint32 interval, void*param)
-{
-	LTexture*self = reinterpret_cast<LTexture *>(param);
-	self->movePolice();
-	SDL_TimerID timerID = SDL_AddTimer(60, PoliceMove, self);
-	return interval;
-}*/
 
 void LTexture::carSpeed()
 {
-	
+	if (hit != true)
+	{
 		if (posX < (-mWidth))
-			posX = 1280+mWidth;
+		{
+			posX = 1280 + mWidth + (rand() % 2000);
+			std::cout << "PosX: " << posX << std::endl;
+		}
 		else
 		{
-			if (SDL_GetTicks() % (modulo * 1000) < 50)
+			if ((SDL_GetTicks() - poprzedniePrzyspieszenie) > 15000)
 			{
-				dx = dx + 0.02;
-				modulo += 3;
+				dx = dx + 0.25;
+				std::cout << "Przyspieszenie " << dx << std::endl;
+				poprzedniePrzyspieszenie = SDL_GetTicks();
 			}
 			else
+			{
 				posX = posX - dx;
+			}
 		}
-		
+	}
+}
+
+void LTexture::carRotate()
+{
+	if (hit == true)
+	{
+		angle += 1;
+		posX += 3;
+		posY -= 2;
+		if (posX > 1280 + mWidth)
+		{
+			angle = 0;
+			hit = false;
+			posX = 1280 + mWidth + (rand() % 2000);
+			posY = 530;
+			clip = NULL;
+			center = NULL;
+			flip = SDL_FLIP_NONE;
+		}
+	}
+	else
+	{
+		if (posX < (-mWidth))
+		{
+			posX = 1280 + mWidth + (rand() % 2000);
+			std::cout << "PosX: " << posX << std::endl;
+		}
+		else
+		{
+			if ((SDL_GetTicks() - poprzedniePrzyspieszenie) > 15000)
+			{
+				dx = dx + 0.25;
+				std::cout << "Przyspieszenie " << dx << std::endl;
+				poprzedniePrzyspieszenie = SDL_GetTicks();
+			}
+			else
+			{
+				posX = posX - dx;
+			}
+		}
+	}
+
 }
 
 SDL_Rect* LTexture::getCollider()
@@ -147,7 +237,27 @@ SDL_Rect* LTexture::getCollider()
 
 void LTexture::moveBackground()
 {
-	posX -= 0.02;
+	posX -= 0.1;
 	if (posX < -mWidth)
 		posX = 1280;
+}
+
+void LTexture::mousePos(double x, double y)
+{
+	posX = x-mWidth/2.0;
+	posY = y-mHeight/2.0;
+}
+
+void LTexture::changeHit()
+{
+	if (hit == false)
+	{
+		hit = true;
+	}
+	else hit = false;
+}
+
+bool LTexture::returnHit()
+{
+	return hit;
 }
